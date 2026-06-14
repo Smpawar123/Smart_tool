@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-In-One Smart Offline & Online Tool</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Cropper.js for Windows Photos Style Crop -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <!-- pdf-lib for Unlimited PDF Merge -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <!-- Top Navigation / Status Bar -->
+    <header class="bg-blue-950 text-white py-4 px-6 shadow-md flex justify-between items-center sticky top-0 z-50">
+        <div>
+            <h1 class="text-xl font-bold font-serif">स्मार्ट ऑल-इन-वन टूल</h1>
+            <p class="text-xs text-blue-200">डेटा बचत आणि प्रायव्हसी मोड सक्रिय</p>
+        </div>
+        <!-- नेटवर्क स्टेटस इंडिकेटर -->
+        <div id="statusIndicator" class="px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white transition-all">
+            तपासत आहे...
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-6xl mx-auto p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- MODULE 1: Windows Style Cropper -->
+        <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl">✂️</span>
+                <h2 class="text-lg font-bold text-blue-950">इमेज क्रॉप आणि रिसाईझ (Windows Style)</h2>
+            </div>
+            <input type="file" id="cropInput" accept="image/*" class="w-full text-sm border p-2 rounded bg-slate-50">
+            
+            <div class="max-h-64 overflow-hidden bg-slate-100 rounded flex justify-center items-center">
+                <img id="imageToCrop" class="max-w-full block">
+            </div>
+
+            <div class="flex gap-2 justify-center text-xs">
+                <button id="btnFree" class="bg-slate-200 px-3 py-1 rounded font-semibold">फ्री हँड</button>
+                <button id="btnPassport" class="bg-slate-200 px-3 py-1 rounded font-semibold">पासपोर्ट (3:4)</button>
+                <button id="btnSquare" class="bg-slate-200 px-3 py-1 rounded font-semibold">चौकोनी (1:1)</button>
+            </div>
+
+            <button id="executeCropBtn" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 rounded transition shadow">
+                फोटो क्रॉप करा
+            </button>
+
+            <div id="cropOutputContainer" class="hidden text-center p-3 border border-dashed border-green-300 bg-green-50 rounded">
+                <img id="croppedOutputImg" class="max-h-32 mx-auto rounded mb-2">
+                <a id="downloadCropLink" class="inline-block bg-green-600 text-white text-xs font-bold py-1.5 px-4 rounded" download="cropped_image.jpg">डाऊनलोड</a>
+            </div>
+        </section>
+
+        <!-- MODULE 2: PDF Merge (PDF24 Style) -->
+        <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl">🔀</span>
+                <h2 class="text-lg font-bold text-blue-955">अमर्यादित PDF मर्ज (PDF24 Style)</h2>
+            </div>
+            <p class="text-xs text-slate-500">कोणतीही फी नाही, कितीही फाईल्स एकाच वेळी एकत्र करा.</p>
+            <input type="file" id="pdfMergeInput" accept="application/pdf" multiple class="w-full text-sm border p-2 rounded bg-slate-50">
+            <div id="pdfCount" class="text-xs font-bold text-indigo-600"></div>
+
+            <button id="executeMergeBtn" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 rounded transition shadow">
+                सर्व PDF एकत्र करा
+            </button>
+
+            <div id="mergeOutputContainer" class="hidden text-center p-3 bg-green-50 border border-green-200 rounded">
+                <p class="text-xs text-green-700 font-bold mb-2">✓ PDF यशस्वीरित्या एकत्र झाली!</p>
+                <button id="downloadMergeBtn" class="bg-green-600 text-white text-xs font-bold py-1.5 px-4 rounded">डाउनलोड करा</button>
+            </div>
+        </section>
+
+        <!-- MODULE 3: Advanced AI Background Change Preview -->
+        <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4 md:col-span-2">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl">🎨</span>
+                <h2 class="text-lg font-bold text-blue-950">बॅकग्राउंड चेंज (AI Background Control)</h2>
+            </div>
+            <div class="p-4 bg-blue-50 border border-blue-100 rounded text-center">
+                <p class="text-sm font-semibold text-blue-900">💡 टीप: ऑफलाईन मोडमध्ये प्लेन बॅकग्राउंड कलर्स आणि ऑनलाईन मोडमध्ये प्रगत AI कटआऊट सपोर्ट मिळेल.</p>
+                <p class="text-xs text-slate-500 mt-1">हे फीचर अंतिम ॲप्लिकेशनमध्ये समाविष्ट केले जात आहे...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- १. ऑनलाईन / ऑफलाईन डिटेक्टर लॉजिक ---
+        const statusIndicator = document.getElementById('statusIndicator');
+        function checkNetwork() {
+            if (navigator.onLine) {
+                statusIndicator.innerText = "● ऑनलाईन मोड";
+                statusIndicator.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-600 text-white";
+            } else {
+                statusIndicator.innerText = "● ऑफलाईन (डेटा बचत चालू)";
+                statusIndicator.className = "px-3 py-1 rounded-full text-xs font-bold bg-orange-600 text-white";
+            }
+        }
+        window.addEventListener('online', checkNetwork);
+        window.addEventListener('offline', checkNetwork);
+        checkNetwork();
+
+        // --- २. विंडोज क्रॉपिंग लॉजिक ---
+        let cropper;
+        const cropInput = document.getElementById('cropInput');
+        const imageToCrop = document.getElementById('imageToCrop');
+
+        cropInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                imageToCrop.src = event.target.result;
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(imageToCrop, { viewMode: 1, autoCropArea: 1 });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('btnFree').addEventListener('click', () => cropper.setAspectRatio(NaN));
+        document.getElementById('btnPassport').addEventListener('click', () => cropper.setAspectRatio(3 / 4));
+        document.getElementById('btnSquare').addEventListener('click', () => cropper.setAspectRatio(1 / 1));
+
+        document.getElementById('executeCropBtn').addEventListener('click', () => {
+            if (!cropper) return alert("कृपया आधी फोटो निवडा!");
+            const canvas = cropper.getCroppedCanvas();
+            const url = canvas.toDataURL('image/jpeg', 0.85);
+            document.getElementById('croppedOutputImg').src = url;
+            document.getElementById('downloadCropLink').href = url;
+            document.getElementById('cropOutputContainer').classList.remove('hidden');
+        });
+
+        // --- ३. अनलिमिटेड पीडीएफ मर्ज लॉजिक ---
+        let selectedPdfs = [];
+        document.getElementById('pdfMergeInput').addEventListener('change', (e) => {
+            selectedPdfs = Array.from(e.target.files);
+            document.getElementById('pdfCount').innerText = `निवडलेल्या फाईल्स: ${selectedPdfs.length}`;
+        });
+
+        document.getElementById('executeMergeBtn').addEventListener('click', async () => {
+            if (selectedPdfs.length < 2) return alert("मर्ज करण्यासाठी किमान २ PDF निवडा!");
+            
+            const mergedPdf = await PDFLib.PDFDocument.create();
+            for (const file of selectedPdfs) {
+                const bytes = await file.arrayBuffer();
+                const pdf = await PDFLib.PDFDocument.load(bytes);
+                const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                pages.forEach(p => mergedPdf.addPage(p));
+            }
+            const mergedBytes = await mergedPdf.save();
+            const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+            const blobUrl = URL.createObjectURL(blob);
+
+            document.getElementById('mergeOutputContainer').classList.remove('hidden');
+            document.getElementById('downloadMergeBtn').onclick = () => {
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = 'Merged_Document.pdf';
+                a.click();
+            };
+        });
+    </script>
+</body>
+</html>
