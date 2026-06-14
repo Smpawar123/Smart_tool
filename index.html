@@ -3,298 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All-In-One Smart Offline & Online Tool</title>
-    <!-- Tailwind CSS -->
+    <title>स्मार्ट मल्टिफंक्शनल डॅशबोर्ड (Pro Version)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Cropper.js for Windows Photos Style Crop -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <!-- pdf-lib for Unlimited PDF Merge -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800">
+<body class="bg-slate-100 min-h-screen text-slate-800">
 
-    <!-- Top Navigation / Status Bar -->
-    <header class="bg-blue-950 text-white py-4 px-6 shadow-md flex justify-between items-center sticky top-0 z-50">
-        <div>
-            <h1 class="text-xl font-bold font-serif">स्मार्ट ऑल-इन-वन टूल</h1>
-            <p class="text-xs text-blue-200">डेटा बचत आणि प्रायव्हसी मोड सक्रिय</p>
+    <header class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white shadow-xl sticky top-0 z-50 px-4 py-4 flex flex-wrap justify-between items-center border-b border-blue-800">
+        <div class="flex items-center space-x-3">
+            <div class="bg-blue-600 text-white p-2 rounded-lg font-black text-xl tracking-wider shadow">S</div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight">SMART DIGI-DASHBOARD</h1>
+                <p class="text-[11px] text-blue-300 font-medium">अमर्यादित ऑनलाईन + ऑफलाईन प्रोसेसिंग टूल</p>
+            </div>
         </div>
-        <!-- नेटवर्क स्टेटस इंडिकेटर -->
-        <div id="statusIndicator" class="px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white transition-all">
-            तपासत आहे...
+        <div id="topBannerNotice" class="text-xs font-semibold bg-amber-500/20 text-amber-300 px-3 py-1.5 rounded-full border border-amber-500/30 max-w-xs truncate">
+            📢 लोड होत आहे...
         </div>
     </header>
 
-    <!-- Main Workspace -->
-    <main class="max-w-6xl mx-auto p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- MODULE 1: Windows Style Cropper -->
-        <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
-            <div class="flex items-center space-x-2">
-                <span class="text-xl">✂️</span>
-                <h2 class="text-lg font-bold text-blue-950">इमेज क्रॉप आणि रिसाईझ (Windows Style)</h2>
+        <aside class="lg:col-span-1 space-y-4">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-3 px-2">मेनू डॅशबोर्ड</h2>
+                <nav class="space-y-1" id="dashboardMenu">
+                    <button onclick="switchTab('image-tab')" id="btn-image-tab" class="tab-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold transition-all bg-blue-50 text-blue-700 shadow-sm border border-blue-100">
+                        <span>🖼️</span> <span>इमेज क्रॉप आणि कॉम्प्रेस</span>
+                    </button>
+                    <button onclick="switchTab('pdf-merge-tab')" id="btn-pdf-merge-tab" class="tab-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all border border-transparent">
+                        <span>🔀</span> <span>मल्टिपल PDF मर्ज</span>
+                    </button>
+                    <button onclick="switchTab('pdf-split-tab')" id="btn-pdf-split-tab" class="tab-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all border border-transparent">
+                        <span>✂️</span> <span>PDF पेजेस स्प्लिट करा</span>
+                    </button>
+                    <button onclick="switchTab('admin-tab')" id="btn-admin-tab" class="tab-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all border border-transparent">
+                        <span>🔒</span> <span>जाहिरात नियंत्रण (Admin)</span>
+                    </button>
+                </nav>
             </div>
-            <input type="file" id="cropInput" accept="image/*" class="w-full text-sm border p-2 rounded bg-slate-50">
+
+            <div id="sidebarAdBox" class="bg-gradient-to-br from-amber-50 to-orange-50 p-4 rounded-2xl border-2 border-dashed border-amber-300 shadow-sm text-center space-y-2">
+                <span class="bg-amber-200 text-amber-900 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">जाहिरात</span>
+                <p id="sidebarAdText" class="text-xs font-bold text-slate-800 leading-relaxed">संपर्क: ७४९९१६७३०० वर जाहिरात देण्यासाठी.</p>
+            </div>
+        </aside>
+
+        <main class="lg:col-span-3">
             
-            <div class="max-h-64 overflow-hidden bg-slate-100 rounded flex justify-center items-center">
-                <img id="imageToCrop" class="max-w-full block">
+            <div id="image-tab" class="tab-content bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <div class="border-b border-slate-100 pb-3">
+                    <h2 class="text-xl font-extrabold text-slate-900">🖼️ प्रगत इमेज क्रॉप आणि कॉम्प्रेसर (Pi7 Premium)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">विंडोज स्टाईल फ्री-हँड क्रॉपिंग, बॅकग्राउंड चेंज आणि अचूक केबी सेटिंग</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-slate-600 uppercase">१. फोटो अपलोड करा:</label>
+                            <input type="file" id="imageInput" accept="image/*" class="w-full text-xs border border-slate-300 p-2.5 rounded-xl bg-slate-50 font-medium">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-600 uppercase">२. क्रॉप अँगल सिलेक्ट करा:</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button id="setFree" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg border border-slate-200 transition">फ्री हँड</button>
+                                <button id="setPassport" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg border border-slate-200 transition">पासपोर्ट (3:4)</button>
+                                <button id="setSquare" class="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-lg border border-slate-200 transition">चौकोनी (1:1)</button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-600 uppercase">३. बॅकग्राउंड結構 बदला:</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button id="bgWhite" class="border border-slate-300 px-2 py-2 rounded-lg bg-white text-xs font-bold shadow-sm hover:bg-slate-50 transition text-slate-800">पांढरा</button>
+                                <button id="bgBlue" class="border border-blue-400 px-2 py-2 rounded-lg bg-blue-600 text-white text-xs font-bold shadow-sm hover:bg-blue-700 transition">निळा</button>
+                                <button id="bgTransparent" class="border border-slate-200 px-2 py-2 rounded-lg bg-slate-100 text-xs font-bold shadow-sm hover:bg-slate-200 transition text-slate-700">मूळ रंग</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50/60 p-3.5 rounded-xl border border-blue-100 space-y-1.5">
+                            <label class="block text-xs font-bold text-blue-950 uppercase">४. टार्गेट साईझ (KB मध्ये सांगा):</label>
+                            <div class="flex items-center space-x-3">
+                                <input type="number" id="targetKB" value="50" class="w-24 border border-blue-200 p-2 rounded-xl bg-white text-center font-extrabold text-blue-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <span class="text-xs font-bold text-blue-900/70">KB च्या आत कॉम्प्रेस करा</span>
+                            </div>
+                        </div>
+
+                        <button id="processImageBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-md transform active:scale-[0.98]">
+                            फोटो जनरेट करा ⚡
+                        </button>
+                    </div>
+
+                    <div class="md:col-span-3 flex flex-col justify-between space-y-4">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-slate-400 uppercase">क्रॉपिंग विंडो एरिया:</label>
+                            <div class="h-64 overflow-hidden bg-slate-900 rounded-2xl flex justify-center items-center shadow-inner relative border border-slate-800">
+                                <img id="cropPreviewImg" class="max-w-full block">
+                            </div>
+                        </div>
+
+                        <div id="imageOutputArea" class="hidden text-center p-4 border border-dashed border-green-300 bg-green-50/50 rounded-2xl">
+                            <p class="text-xs font-bold text-green-700 mb-2">✓ फोटो यशस्वीरित्या सेव्ह झाला!</p>
+                            <img id="finalOutputImg" class="max-h-28 mx-auto rounded-lg shadow-md border mb-3">
+                            <a id="downloadImageLink" class="inline-block w-full bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2.5 rounded-xl shadow transition" download="smart_photo.jpg">डाऊनलोड करा</a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex gap-2 justify-center text-xs">
-                <button id="btnFree" class="bg-slate-200 px-3 py-1 rounded font-semibold">फ्री हँड</button>
-                <button id="btnPassport" class="bg-slate-200 px-3 py-1 rounded font-semibold">पासपोर्ट (3:4)</button>
-                <button id="btnSquare" class="bg-slate-200 px-3 py-1 rounded font-semibold">चौकोनी (1:1)</button>
+            <div id="pdf-merge-tab" class="tab-content hidden bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="border-b border-slate-100 pb-3">
+                    <h2 class="text-xl font-extrabold text-indigo-900">🔀 अमर्यादित PDF मर्ज टूल (PDF24 Premium)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">एकाच वेळी अनेक PDF फाईल्स सिलेक्ट करून एकत्र जोडण्याची प्रगत व्यवस्था</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="border-2 border-dashed border-indigo-200 bg-indigo-50/30 p-6 rounded-2xl text-center space-y-3 relative">
+                        <input type="file" id="pdfMergeFiles" accept="application/pdf" multiple class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10">
+                        <div class="text-3xl">📂</div>
+                        <p class="text-xs font-bold text-indigo-950">येथे क्लिक करून एकाच वेळी सर्व PDF फाईल्स सिलेक्ट करा</p>
+                        <p class="text-[10px] text-slate-400">मोबाईलवर फाईल निवडताना बोट दाबून धरून (Long Press) मल्टिपल सिलेक्ट करा</p>
+                    </div>
+
+                    <div id="mergeFilesStatus" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-xl border border-indigo-100 hidden"></div>
+
+                    <button id="runMergeBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-md">
+                        निवडलेल्या सर्व PDF एकत्र करा 🔀
+                    </button>
+
+                    <div id="mergeSuccessBox" class="hidden text-center p-4 bg-green-50 border border-green-200 rounded-2xl">
+                        <p class="text-xs font-bold text-green-700 mb-2">🎉 सर्व फाईल्स यशस्वीरित्या जोडल्या गेल्या आहेत!</p>
+                        <button id="downloadMergedPdf" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2.5 px-6 rounded-xl shadow">मर्ज झालेली PDF डाऊनलोड करा</button>
+                    </div>
+                </div>
             </div>
 
-            <button id="executeCropBtn" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 rounded transition shadow">
-                फोटो क्रॉप करा
-            </button>
+            <div id="pdf-split-tab" class="tab-content hidden bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="border-b border-slate-100 pb-3">
+                    <h2 class="text-xl font-extrabold text-teal-900">✂️ प्रगत PDF स्प्लिट / पेजेस वेगळे करा</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">मोठ्या PDF फाईलमधून सर्व पेजेस एका क्लिकवर स्वतंत्र फाईल म्हणून वेगळे करा</p>
+                </div>
 
-            <div id="cropOutputContainer" class="hidden text-center p-3 border border-dashed border-green-300 bg-green-50 rounded">
-                <img id="croppedOutputImg" class="max-h-32 mx-auto rounded mb-2">
-                <a id="downloadCropLink" class="inline-block bg-green-600 text-white text-xs font-bold py-1.5 px-4 rounded" download="cropped_image.jpg">डाऊनलोड</a>
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-600 uppercase">PDF फाईल निवडा:</label>
+                        <input type="file" id="pdfSplitFile" accept="application/pdf" class="w-full text-xs border border-slate-300 p-2.5 rounded-xl bg-slate-50 font-medium">
+                    </div>
+
+                    <button id="runSplitBtn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition shadow-md">
+                        सर्व पेजेस स्प्लिट करा ✂️
+                    </button>
+
+                    <div id="splitSuccessBox" class="hidden p-4 bg-slate-50 border rounded-2xl space-y-2">
+                        <p class="text-xs font-bold text-teal-800 border-b pb-1">🗂️ वेगळे झालेले स्वतंत्र पेजेस खालीलप्रमाणे:</p>
+                        <div id="innerSplitLinks" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1"></div>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <!-- MODULE 2: PDF Merge (PDF24 Style) -->
-        <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
-            <div class="flex items-center space-x-2">
-                <span class="text-xl">🔀</span>
-                <h2 class="text-lg font-bold text-blue-955">अमर्यादित PDF मर्ज (PDF24 Style)</h2>
+            <div id="admin-tab" class="tab-content hidden bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <div class="border-b border-slate-100 pb-3">
+                    <h2 class="text-xl font-extrabold text-slate-900">🔒 जाहिरात नियंत्रण केंद्र (Admin Control)</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">येथून तुम्ही संपूर्ण वेबसाईटवर दिसणाऱ्या तुमच्या जाहिरातीचा मेसेज बदलू शकता</p>
+                </div>
+
+                <div id="adminLoginArea" class="max-w-md mx-auto p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center space-y-3">
+                    <label class="block text-xs font-bold text-slate-700 uppercase">सुरक्षित ऍडमिन पासवर्ड टाका:</label>
+                    <input type="password" id="adminPass" placeholder="🔑 पासवर्ड एंटर करा" class="w-full text-sm p-2.5 rounded-xl bg-white border border-slate-300 text-center font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="adminLoginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 rounded-xl shadow">लॉगिन करा</button>
+                </div>
+
+                <div id="adminControlArea" class="hidden space-y-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <p class="text-xs font-bold text-green-700 bg-green-100 p-2 rounded-lg text-center">✓ ऍडमिन लॉगिन यशस्वी! आता तुम्ही बदल करू शकता.</p>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-700 uppercase">१. टॉप हेडर जाहिरात मजकूर (Top Header Notification Message):</label>
+                        <textarea id="newHeaderAd" rows="2" class="w-full text-xs p-2.5 rounded-xl bg-white border border-slate-300 font-semibold" placeholder="टॉप लाईन जाहिरात संदेश..."></textarea>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-700 uppercase">२. साईडबार जाहिरात बॅनर मजकूर (Sidebar Main Banner Text):</label>
+                        <textarea id="newSidebarAd" rows="3" class="w-full text-xs p-2.5 rounded-xl bg-white border border-slate-300 font-semibold" placeholder="साईडबार जाहिरात संदेश..."></textarea>
+                    </div>
+
+                    <button id="updateAdBtn" class="w-full bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2.5 rounded-xl shadow transition">
+                        डॅशबोर्डवर जाहिरात लाईव्ह करा 🚀
+                    </button>
+                </div>
             </div>
-            <p class="text-xs text-slate-500">कोणतीही फी नाही, कितीही फाईल्स एकाच वेळी एकत्र करा.</p>
-            <input type="file" id="pdfMergeInput" accept="application/pdf" multiple class="w-full text-sm border p-2 rounded bg-slate-50">
-            <div id="pdfCount" class="text-xs font-bold text-indigo-600"></div>
 
-            <button id="executeMergeBtn" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 rounded transition shadow">
-                सर्व PDF एकत्र करा
-            </button>
-
-            <div id="mergeOutputContainer" class="hidden text-center p-3 bg-green-50 border border-green-200 rounded">
-                <p class="text-xs text-green-700 font-bold mb-2">✓ PDF यशस्वीरित्या एकत्र झाली!</p>
-                <button id="downloadMergeBtn" class="bg-green-600 text-white text-xs font-bold py-1.5 px-4 rounded">डाउनलोड करा</button>
-            </div>
-        </section>
-
-        <!-- MODULE 3: Advanced AI Background Change Preview -->
-        <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4 md:col-span-2">
-            <div class="flex items-center space-x-2">
-                <span class="text-xl">🎨</span>
-                <h2 class="text-lg font-bold text-blue-950">बॅकग्राउंड चेंज (AI Background Control)</h2>
-            </div>
-            <div class="p-4 bg-blue-50 border border-blue-100 rounded text-center">
-                <p class="text-sm font-semibold text-blue-900">💡 टीप: ऑफलाईन मोडमध्ये प्लेन बॅकग्राउंड कलर्स आणि ऑनलाईन मोडमध्ये प्रगत AI कटआऊट सपोर्ट मिळेल.</p>
-                <p class="text-xs text-slate-500 mt-1">हे फीचर अंतिम ॲप्लिकेशनमध्ये समाविष्ट केले जात आहे...</p>
-            </div>
-        </section>
-
-    </main>
-
-    <script>
-        // --- १. ऑनलाईन / ऑफलाईन डिटेक्टर लॉजिक ---
-        const statusIndicator = document.getElementById('statusIndicator');
-        function checkNetwork() {
-            if (navigator.onLine) {
-                statusIndicator.innerText = "● ऑनलाईन मोड";
-                statusIndicator.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-600 text-white";
-            } else {
-                statusIndicator.innerText = "● ऑफलाईन (डेटा बचत चालू)";
-                statusIndicator.className = "px-3 py-1 rounded-full text-xs font-bold bg-orange-600 text-white";
-            }
-        }
-        window.addEventListener('online', checkNetwork);
-        window.addEventListener('offline', checkNetwork);
-        checkNetwork();
-
-        // --- २. विंडोज क्रॉपिंग लॉजिक ---
-        let cropper;
-        const cropInput = document.getElementById('cropInput');
-        const imageToCrop = document.getElementById('imageToCrop');
-
-        cropInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                imageToCrop.src = event.target.result;
-                if (cropper) cropper.destroy();
-                cropper = new Cropper(imageToCrop, { viewMode: 1, autoCropArea: 1 });
-            };
-            reader.readAsDataURL(file);
-        });
-
-        document.getElementById('btnFree').addEventListener('click', () => cropper.setAspectRatio(NaN));
-        document.getElementById('btnPassport').addEventListener('click', () => cropper.setAspectRatio(3 / 4));
-        document.getElementById('btnSquare').addEventListener('click', () => cropper.setAspectRatio(1 / 1));
-
-        document.getElementById('executeCropBtn').addEventListener('click', () => {
-            if (!cropper) return alert("कृपया आधी फोटो निवडा!");
-            const canvas = cropper.getCroppedCanvas();
-            const url = canvas.toDataURL('image/jpeg', 0.85);
-            document.getElementById('croppedOutputImg').src = url;
-            document.getElementById('downloadCropLink').href = url;
-            document.getElementById('cropOutputContainer').classList.remove('hidden');
-        });
-
-        // --- ३. अनलिमिटेड पीडीएफ मर्ज लॉजिक ---
-        let selectedPdfs = [];
-        document.getElementById('pdfMergeInput').addEventListener('change', (e) => {
-            selectedPdfs = Array.from(e.target.files);
-            document.getElementById('pdfCount').innerText = `निवडलेल्या फाईल्स: ${selectedPdfs.length}`;
-        });
-
-        document.getElementById('executeMergeBtn').addEventListener('click', async () => {
-            if (selectedPdfs.length < 2) return alert("मर्ज करण्यासाठी किमान २ PDF निवडा!");
-            
-            const mergedPdf = await PDFLib.PDFDocument.create();
-            for (const file of selectedPdfs) {
-                const bytes = await file.arrayBuffer();
-                const pdf = await PDFLib.PDFDocument.load(bytes);
-                const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                pages.forEach(p => mergedPdf.addPage(p));
-            }
-            const mergedBytes = await mergedPdf.save();
-            const blob = new Blob([mergedBytes], { type: 'application/pdf' });
-            const blobUrl = URL.createObjectURL(blob);
-
-            document.getElementById('mergeOutputContainer').classList.remove('hidden');
-            document.getElementById('downloadMergeBtn').onclick = () => {
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = 'Merged_Document.pdf';
-                a.click();
-            };
-        });
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="mr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ऑल-इन-वन व्यावसायिक टूल (Pi7 + PDF24 Pro)</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-</head>
-<body class="bg-slate-50 min-h-screen text-slate-800 font-sans">
-
-    <header class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-6 px-4 shadow-lg text-center">
-        <h1 class="text-3xl font-extrabold font-serif">FREE Smart Image & PDF Tool</h1>
-        <p class="text-xs text-blue-200 mt-1">अमर्यादित फाईल्स • जलद आणि सुरक्षित</p>
-    </header>
-
-    <div id="adBannerSpace" class="max-w-6xl mx-auto mt-4 px-4">
-        <div class="bg-yellow-50 border-2 border-dashed border-yellow-400 p-3 rounded-lg text-center text-sm font-bold text-amber-900 shadow-sm">
-            📢 <span id="adText">तुमच्या व्यवसायाची जाहिरात इथे दाखवा! संपर्क: ७४९९१६७३००</span>
-        </div>
+        </main>
     </div>
 
-    <main class="max-w-6xl mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <section class="bg-white p-5 rounded-xl shadow border border-slate-200 space-y-4">
-            <div class="flex items-center space-x-2 border-b pb-2">
-                <span class="text-2xl">🖼️</span>
-                <h2 class="text-lg font-bold text-blue-900">इमेज क्रॉप, बॅकग्राउंड आणि KB साईझ (Pi7 Pro)</h2>
-            </div>
-            
-            <div>
-                <label class="block text-xs font-bold mb-1 text-slate-600">फोटो निवडा:</label>
-                <input type="file" id="imageInput" accept="image/*" class="w-full text-sm border p-2 rounded bg-slate-50">
-            </div>
-
-            <div class="max-h-64 overflow-hidden bg-slate-900 rounded flex justify-center items-center">
-                <img id="cropPreviewImg" class="max-w-full block">
-            </div>
-
-            <div class="flex gap-2 justify-center text-xs">
-                <button id="setFree" class="bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded font-semibold">फ्री हँड क्रॉप</button>
-                <button id="setPassport" class="bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded font-semibold">पासपोर्ट (3:4)</button>
-                <button id="setSquare" class="bg-slate-200 hover:bg-slate-300 px-3 py-1 rounded font-semibold">चौकोनी (1:1)</button>
-            </div>
-
-            <div class="space-y-1">
-                <label class="block text-xs font-bold text-slate-600">बॅकग्राउंड रंग बदला:</label>
-                <div class="flex gap-3 justify-center">
-                    <button id="bgWhite" class="border px-4 py-1 rounded bg-white text-xs font-bold shadow-sm">पांढरा (White)</button>
-                    <button id="bgBlue" class="border px-4 py-1 rounded bg-blue-600 text-white text-xs font-bold shadow-sm">निळा (Blue)</button>
-                    <button id="bgTransparent" class="border px-4 py-1 rounded bg-slate-100 text-xs font-bold shadow-sm">ट्रान्सपरंट</button>
-                </div>
-            </div>
-
-            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                <label class="block text-xs font-bold text-blue-900 mb-1">टार्गेट फाईल साईझ (KB मध्ये सांगा):</label>
-                <div class="flex items-center space-x-2">
-                    <input type="number" id="targetKB" value="50" class="w-24 border p-1 rounded bg-white text-center font-bold">
-                    <span class="text-xs font-bold text-slate-600">KB च्या आत सेव्ह करा</span>
-                </div>
-            </div>
-
-            <button id="processImageBtn" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 rounded transition shadow">
-                प्रोसेस आणि डाऊनलोड करा
-            </button>
-
-            <div id="imageOutputArea" class="hidden text-center p-3 border border-dashed border-green-300 bg-green-50 rounded">
-                <img id="finalOutputImg" class="max-h-32 mx-auto rounded shadow mb-2">
-                <a id="downloadImageLink" class="inline-block bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-2 px-6 rounded shadow" download="smart_photo.jpg">डाऊनलोड करा</a>
-            </div>
-        </section>
-
-        <section class="bg-white p-5 rounded-xl shadow border border-slate-200 space-y-4">
-            <div class="flex items-center space-x-2 border-b pb-2">
-                <span class="text-2xl">📄</span>
-                <h2 class="text-lg font-bold text-indigo-900">अमर्यादित PDF मर्ज आणि स्प्लिट (PDF24 Pro)</h2>
-            </div>
-
-            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
-                <label class="block text-xs font-bold text-slate-700">१. अनेक PDF एकत्र (Merge) करा:</label>
-                <input type="file" id="pdfMergeFiles" accept="application/pdf" multiple class="w-full text-sm border p-2 rounded bg-white">
-                <div id="mergeFilesStatus" class="text-xs font-bold text-indigo-600"></div>
-                <button id="runMergeBtn" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white text-xs font-bold py-2 rounded transition shadow">सर्व PDF एकत्र करा</button>
-                
-                <div id="mergeSuccessBox" class="hidden text-center p-2 bg-green-100 rounded">
-                    <button id="downloadMergedPdf" class="bg-green-600 text-white text-xs font-bold py-1 px-3 rounded">मर्ज झालेली PDF डाऊनलोड</button>
-                </div>
-            </div>
-
-            <div class="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
-                <label class="block text-xs font-bold text-slate-700">२. PDF चे सर्व पेजेस वेगळे (Split) करा:</label>
-                <input type="file" id="pdfSplitFile" accept="application/pdf" class="w-full text-sm border p-2 rounded bg-white">
-                <button id="runSplitBtn" class="w-full bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold py-2 rounded transition shadow">पेजेस स्प्लिट करा</button>
-                
-                <div id="splitSuccessBox" class="hidden p-2 bg-green-50 border rounded max-h-32 overflow-y-auto space-y-1 text-center" id="splitLinks">
-                    <p class="text-xs font-bold text-green-700 mb-1">✓ सर्व पेजेस वेगळे झाले:</p>
-                    <div id="innerSplitLinks" class="space-y-1"></div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-slate-900 text-slate-400 mt-12 py-8 px-4 border-t border-slate-800">
-        <div class="max-w-md mx-auto bg-slate-800 p-4 rounded-lg shadow-inner text-center space-y-3">
-            <h3 class="text-xs font-bold text-white tracking-wider">🔒 जाहिरात नियंत्रण (ADMIN PANEL)</h3>
-            <div id="adminLoginArea" class="space-y-2">
-                <input type="password" id="adminPass" placeholder="पासवर्ड टाका" class="w-full text-xs p-2 rounded bg-slate-700 border border-slate-600 text-white text-center">
-                <button id="adminLoginBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-4 rounded">लॉगिन करा</button>
-            </div>
-            <div id="adminControlArea" class="hidden space-y-2">
-                <textarea id="newAdText" rows="2" class="w-full text-xs p-2 rounded bg-slate-700 border border-slate-600 text-white" placeholder="नवीन जाहिरातीचा मजकूर इथे टाका..."></textarea>
-                <button id="updateAdBtn" class="w-full bg-green-600 text-white text-xs font-bold py-1.5 rounded">जाहिरात अपडेट करा</button>
-            </div>
-        </div>
-        <div class="text-center text-[10px] text-slate-600 mt-6">&copy; 2026 Smart Tool. All Rights Reserved.</div>
-    </footer>
-
     <script>
-        const { PDFDocument } = PDFLib;
+        // --- LOCAL STORAGE DATA SYNC FOR ADMIN CHANGES ---
+        const defaultHeaderText = "📢 तुमच्या व्यवसायाची जाहिरात येथे दाखवा! संपर्क: ७४९९१६७३००";
+        const defaultSidebarText = "🎯 कॉम्प्रेसर आणि पीडीएफ डॅशबोर्ड जाहिरात स्पेस उपलब्ध. संपर्क साधा: ७४९९१६७३००";
+
+        function loadSavedAds() {
+            const savedHeader = localStorage.getItem('smart_header_ad') || defaultHeaderText;
+            const savedSidebar = localStorage.getItem('smart_sidebar_ad') || defaultSidebarText;
+            
+            document.getElementById('topBannerNotice').innerText = savedHeader;
+            document.getElementById('sidebarAdText').innerText = savedSidebar;
+        }
+
+        // --- DASHBOARD NAVIGATION ROUTING SYSTEM ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-50', 'text-blue-700', 'shadow-sm', 'border-blue-100');
+                btn.classList.add('text-slate-600', 'hover:bg-slate-50', 'border-transparent');
+            });
+
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-50', 'border-transparent');
+            activeBtn.classList.add('bg-blue-50', 'text-blue-700', 'shadow-sm', 'border-blue-100');
+        }
+
+        // --- IMAGE SYSTEM COMPRESSION & CROPPING ---
         let cropper;
         let selectedBg = 'none';
         const cropPreviewImg = document.getElementById('cropPreviewImg');
 
-        // --- IMAGE MANAGEMENT (CROP, BG, KB) ---
         document.getElementById('imageInput').addEventListener('change', (e) => {
             const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                cropPreviewImg.src = event.target.result;
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(cropPreviewImg, { 
+                    viewMode: 1, 
+                    dragMode: 'move',
+                    autoCropArea: 1
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('setFree').addEventListener('click', () => cropper.setAspectRatio(NaN));
+        document.getElementById('setPassport').addEventListener('click', () => cropper.setAspectRatio(3 / 4));
+        document.getElementById('setSquare').addEventListener('click', () => cropper.setAspectRatio(1 / 1));
+
+        document.getElementById('bgWhite').addEventListener('click', () => selectedBg = 'white');
+        document.getElementById('bgBlue').addEventListener('click', () => selectedBg = 'blue');
+        document.getElementById('bgTransparent').addEventListener('click', () => selectedBg = 'none');
+
+        document.getElementById('processImageBtn').addEventListener('click', () => {
+            if (!cropper) return alert("कृपया आधी एक फोटो अपलोड करा!");
+            
+            const canvas = cropper.getCroppedCanvas();
+            const ctx = canvas.getContext('2d');
+
+            if (selectedBg !== 'none') {
+                ctx.globalCompositeOperation = 'destination-over';
+                ctx.fillStyle = selectedBg === 'white' ? '#FFFFFF' : '#0044FF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            const targetKB = parseFloat(document.getElementById('targetKB').value) || 50;
+            let quality = 0.95;
+            let dataUrl = canvas.toDataURL('image/jpeg', quality);
+            
+            while ((dataUrl.length * 0.75) / 1024 > targetKB && quality > 0.05) {
+                quality -= 0.05;
+                dataUrl = canvas.toDataURL('image/jpeg', quality);
+            }
+
+            document.getElementById('finalOutputImg').src = dataUrl;
+            document.getElementById('downloadImageLink').href = dataUrl;
+            document.getElementById('imageOutputArea').classList.remove('hidden');
+        });
+
+        // --- MULTIPLE PDF MERGER PROCESS ---
+        let mergeList = [];
+        const pdfMergeInput = document.getElementById('pdfMergeFiles');
+        const mergeStatusLabel = document.getElementById('mergeFilesStatus');
+
+        pdfMergeInput.addEventListener('change', (e) => {
+            mergeList = Array.from(e.target.files);
+            if (mergeList.length > 0) {
+                mergeStatusLabel.classList.remove('hidden');
+                mergeSt
