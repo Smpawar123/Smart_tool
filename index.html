@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Tool - All Options Working</title>
+    <title>Smart PDF Tool (PDF24 Clone)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #f5f7fa;
+            --primary-color: #2980b9;
+            --secondary-color: #2c3e50;
+            --success-color: #27ae60;
+            --bg-color: #f4f6f9;
             --card-bg: #ffffff;
-            --text-color: #333;
         }
 
         * {
@@ -23,15 +26,14 @@
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-color);
             display: flex;
             min-height: 100vh;
         }
 
         /* Sidebar Styling */
         .sidebar {
-            width: 260px;
-            background-color: var(--primary-color);
+            width: 280px;
+            background-color: var(--secondary-color);
             color: white;
             padding: 20px;
             display: flex;
@@ -41,46 +43,46 @@
 
         .sidebar h2 {
             text-align: center;
+            font-size: 20px;
             margin-bottom: 20px;
-            font-size: 22px;
-            letter-spacing: 1px;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
             padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            color: #ecf0f1;
         }
 
         .nav-btn {
             background: none;
             border: none;
-            color: #b8c7ce;
-            padding: 12px 15px;
+            color: #bdc3c7;
+            padding: 14px 15px;
             text-align: left;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 6px;
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .nav-btn:hover, .nav-btn.active {
-            background-color: var(--accent-color);
+            background-color: var(--primary-color);
             color: white;
         }
 
         /* Main Content Styling */
         .main-content {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
             overflow-y: auto;
         }
 
         .tool-section {
             display: none;
             background: var(--card-bg);
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
         .tool-section.active {
@@ -88,56 +90,80 @@
         }
 
         h2.section-title {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 5px;
-            display: inline-block;
+            color: var(--secondary-color);
+            margin-bottom: 25px;
+            font-size: 24px;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 10px;
         }
 
-        /* Form & Component Controls */
-        textarea, input, select {
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        input[type="file"], input[type="text"], input[type="number"], textarea {
             width: 100%;
             padding: 12px;
-            margin: 10px 0 20px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 6px;
+            background: #fafafa;
             font-size: 15px;
         }
 
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        input[type="file"]:focus, input[type="text"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
 
-        button.action-btn {
-            background-color: var(--accent-color);
+        .action-btn {
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 12px 25px;
+            font-size: 16px;
             font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
             transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        button.action-btn:hover {
-            background-color: #2980b9;
+        .action-btn:hover {
+            background-color: #1a6696;
         }
 
-        .output-box {
-            background: #eef2f5;
-            padding: 15px;
-            border-radius: 5px;
+        .status-box {
             margin-top: 20px;
-            min-height: 50px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            border-left: 5px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-weight: 500;
         }
 
-        /* Responsive Layout */
+        .status-success {
+            display: block;
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 5px solid var(--success-color);
+        }
+
+        .status-error {
+            display: block;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #721c24;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; }
@@ -146,185 +172,205 @@
 </head>
 <body>
 
-    <!-- Sidebar Navigation -->
     <div class="sidebar">
-        <h2><i class="fa-solid fa-screwdriver-wrench"></i> Smart Tool</h2>
-        <button class="nav-btn active" onclick="switchTab('text-tool')"><i class="fa-solid fa-font"></i> Text Utility</button>
-        <button class="nav-btn" onclick="switchTab('crypto-tool')"><i class="fa-solid fa-key"></i> Crypto (Base64)</button>
-        <button class="nav-btn" onclick="switchTab('calc-tool')"><i class="fa-solid fa-calculator"></i> Smart Calc</button>
-        <button class="nav-btn" onclick="switchTab('unit-tool')"><i class="fa-solid fa-ruler"></i> Unit Converter</button>
+        <h2><i class="fa-solid fa-file-pdf"></i> PDF24 Smart Tool</h2>
+        <button class="nav-btn active" onclick="switchTab('txt-to-pdf')"><i class="fa-solid fa-file-lines"></i> Text to PDF</button>
+        <button class="nav-btn" onclick="switchTab('img-to-pdf')"><i class="fa-solid fa-images"></i> Images to PDF</button>
+        <button class="nav-btn" onclick="switchTab('merge-pdf')"><i class="fa-solid fa-file-signature"></i> Merge PDF (एकत्र करा)</button>
+        <button class="nav-btn" onclick="switchTab('split-pdf')"><i class="fa-solid fa-scissors"></i> Split PDF (अलग करा)</button>
     </div>
 
-    <!-- Main Content Area -->
     <div class="main-content">
 
-        <!-- 1. Text Utility Section -->
-        <div id="text-tool" class="tool-section active">
-            <h2 class="section-title">Text Utility Tool</h2>
-            <label>तुमचा मजकूर (Text) इथे टाका:</label>
-            <textarea id="text-input" rows="6" placeholder="इथे टाईप करा किंवा पेस्ट करा..."></textarea>
-            <div class="btn-group">
-                <button class="action-btn" onclick="processText('upper')">UPPERCASE</button>
-                <button class="action-btn" onclick="processText('lower')">lowercase</button>
-                <button class="action-btn" onclick="processText('count')">Count Words & Chars</button>
-                <button class="action-btn" onclick="processText('clear')">Clear</button>
+        <div id="txt-to-pdf" class="tool-section active">
+            <h2 class="section-title">मजकुरापासून PDF बनवा (Text to PDF)</h2>
+            <div class="form-group">
+                <label>फाइलचे नाव (File Name):</label>
+                <input type="text" id="txt-filename" value="Smart_Document">
             </div>
-            <div class="output-box" id="text-output">निकाल इथे दिसेल...</div>
+            <div class="form-group">
+                <label>तुमचा मजकूर इथे लिहा:</label>
+                <textarea id="txt-content" rows="8" placeholder="काहीतरी टाईप करा..."></textarea>
+            </div>
+            <button class="action-btn" onclick="convertTextToPdf()"><i class="fa-solid fa-download"></i> PDF डाउनलोड करा</button>
+            <div id="status-txt" class="status-box"></div>
         </div>
 
-        <!-- 2. Crypto Section (Base64 Encode/Decode) -->
-        <div id="crypto-tool" class="tool-section">
-            <h2 class="section-title">Encryption / Decryption (Base64)</h2>
-            <label>डेटा एन्क्रिप्ट किंवा डिक्रिप्ट करा:</label>
-            <textarea id="crypto-input" rows="4" placeholder="मजकूर किंवा Base64 कोड टाका..."></textarea>
-            <div class="btn-group">
-                <button class="action-btn" onclick="processCrypto('encode')">Encode to Base64</button>
-                <button class="action-btn" onclick="processCrypto('decode')">Decode Base64</button>
+        <div id="img-to-pdf" class="tool-section">
+            <h2 class="section-title">फोटोंची PDF बनवा (Images to PDF)</h2>
+            <div class="form-group">
+                <label>एक किंवा अनेक फोटो निवडा (JPG/PNG):</label>
+                <input type="file" id="img-input" accept="image/*" multiple>
             </div>
-            <div class="output-box" id="crypto-output">सुरक्षित निकाल इथे दिसेल...</div>
+            <button class="action-btn" onclick="convertImagesToPdf()"><i class="fa-solid fa-file-pdf"></i> PDF मध्ये रूपांतरित करा</button>
+            <div id="status-img" class="status-box"></div>
         </div>
 
-        <!-- 3. Smart Calculator Section -->
-        <div id="calc-tool" class="tool-section">
-            <h2 class="section-title">Smart Calculator</h2>
-            <label>गणित टाईप करा (उदा: 25 * 4 + 10):</label>
-            <input type="text" id="calc-input" placeholder="Expression टाका आणि Calculate दाबा">
-            <div class="btn-group">
-                <button class="action-btn" onclick="calculateResult()">Calculate</button>
-                <button class="action-btn" onclick="document.getElementById('calc-input').value=''">Clear</button>
+        <div id="merge-pdf" class="tool-section">
+            <h2 class="section-title">दोन किंवा अधिक PDF एकत्र करा (Merge PDF)</h2>
+            <div class="form-group">
+                <label>सर्व PDF फाइल्स एकाच वेळी निवडा:</label>
+                <input type="file" id="merge-input" accept="application/pdf" multiple>
             </div>
-            <div class="output-box" id="calc-output">उत्तर इथे दिसेल...</div>
+            <button class="action-btn" onclick="mergePdfFiles()"><i class="fa-solid fa-layer-group"></i> फाइल्स एकत्र करून डाउनलोड करा</button>
+            <div id="status-merge" class="status-box"></div>
         </div>
 
-        <!-- 4. Unit Converter Section -->
-        <div id="unit-tool" class="tool-section">
-            <h2 class="section-title">Unit Converter (रूपांतरण)</h2>
-            <label>व्हॅल्यू टाका:</label>
-            <input type="number" id="unit-input" placeholder="संख्या टाका" value="1">
-            
-            <label>कशातून रूपांतर करायचे:</label>
-            <select id="convert-type">
-                <option value="km-m">Kilometer (km) to Meter (m)</option>
-                <option value="m-km">Meter (m) to Kilometer (km)</option>
-                <option value="kg-gm">Kilogram (kg) to Gram (gm)</option>
-                <option value="gm-kg">Gram (gm) to Kilogram (kg)</option>
-            </select>
-            
-            <div class="btn-group">
-                <button class="action-btn" onclick="convertUnits()">Convert</button>
+        <div id="split-pdf" class="tool-section">
+            <h2 class="section-title">PDF मधील पाने वेगळी करा (Split PDF)</h2>
+            <div class="form-group">
+                <label>PDF फाइल निवडा:</label>
+                <input type="file" id="split-input" accept="application/pdf">
             </div>
-            <div class="output-box" id="unit-output">रूपांतरित निकाल इथे दिसेल...</div>
+            <div class="form-group">
+                <label>कोणते पान वेगळे करायचे आहे? (Page Number):</label>
+                <input type="number" id="split-page-num" min="1" value="1" style="border: 1px solid #ccc; background:#fff;">
+            </div>
+            <button class="action-btn" onclick="splitPdfFile()"><i class="fa-solid fa-scissors"></i> ते पान वेगळे करून डाउनलोड करा</button>
+            <div id="status-split" class="status-box"></div>
         </div>
 
     </div>
 
-    <!-- JavaScript Logic to make everything work -->
     <script>
-        // 1. Sidebar Tab Switching Option
+        // Tab Switching Logic
         function switchTab(tabId) {
-            // सर्व सेक्शन्स लपवा
-            document.querySelectorAll('.tool-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            // सर्व बटन्सचे ॲक्टिव्ह स्टेट काढा
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // निवडलेला सेक्शन आणि बटन ॲक्टिव्ह करा
+            document.querySelectorAll('.tool-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+            clearStatus();
         }
 
-        // 2. Text Utility Functions
-        function processText(action) {
-            let input = document.getElementById('text-input').value;
-            let outputBox = document.getElementById('text-output');
-
-            if (action === 'clear') {
-                document.getElementById('text-input').value = '';
-                outputBox.innerText = 'निकाल इथे दिसेल...';
-                return;
-            }
-
-            if (!input.trim()) {
-                outputBox.innerText = 'कृपया आधी बॉक्समध्ये काहीतरी टाईप करा!';
-                return;
-            }
-
-            if (action === 'upper') {
-                outputBox.innerText = input.toUpperCase();
-            } else if (action === 'lower') {
-                outputBox.innerText = input.toLowerCase();
-            } else if (action === 'count') {
-                let words = input.trim().split(/\s+/).filter(w => w.length > 0).length;
-                let chars = input.length;
-                outputBox.innerText = `एकूण शब्द (Words): ${words} \nएकूण अक्षरे (Characters): ${chars}`;
-            }
+        function showStatus(id, msg, isError = false) {
+            let box = document.getElementById(id);
+            box.innerText = msg;
+            box.className = isError ? "status-box status-error" : "status-box status-success";
         }
 
-        // 3. Crypto Functions
-        function processCrypto(action) {
-            let input = document.getElementById('crypto-input').value;
-            let outputBox = document.getElementById('crypto-output');
+        function clearStatus() {
+            document.querySelectorAll('.status-box').forEach(box => box.style.display = 'none');
+        }
 
-            if (!input.trim()) {
-                outputBox.innerText = 'कृपया आधी काहीतरी डेटा टाका!';
-                return;
-            }
-
+        // 1. TEXT TO PDF WORKING LOGIC
+        function convertTextToPdf() {
             try {
-                if (action === 'encode') {
-                    outputBox.innerText = btoa(unescape(encodeURIComponent(input)));
-                } else if (action === 'decode') {
-                    outputBox.innerText = decodeURIComponent(escape(atob(input)));
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                let text = document.getElementById('txt-content').value;
+                let filename = document.getElementById('txt-filename').value || "Document";
+
+                if(!text.trim()) {
+                    showStatus('status-txt', 'कृपया आधी मजकूर टाईप करा!', true);
+                    return;
                 }
-            } catch (err) {
-                outputBox.innerText = "त्रुटी: अवैध Base64 कोड किंवा फॉरमॅट!";
+
+                doc.text(text, 10, 10);
+                doc.save(`${filename}.pdf`);
+                showStatus('status-txt', 'PDF यशस्वीरित्या डाऊनलोड झाली!');
+            } catch (e) {
+                showStatus('status-txt', 'काहीतरी तांत्रिक अडचण आली!', true);
             }
         }
 
-        // 4. Calculator Function
-        function calculateResult() {
-            let input = document.getElementById('calc-input').value;
-            let outputBox = document.getElementById('calc-output');
-
-            if (!input.trim()) {
-                outputBox.innerText = 'कृपया गणित टाईप करा!';
+        // 2. IMAGES TO PDF WORKING LOGIC
+        function convertImagesToPdf() {
+            const files = document.getElementById('img-input').files;
+            if (files.length === 0) {
+                showStatus('status-img', 'कृपया किमान एक फोटो निवडा!', true);
                 return;
             }
 
             try {
-                // सुरक्षेसाठी फक्त गणिती चिन्हांना परवानगी देणारे साधे eval
-                let sanitizedInput = input.replace(/[^0-80-9+\-*/().\s]/g, '');
-                let result = Function(`"use strict"; return (${sanitizedInput})`)();
-                outputBox.innerText = "उत्तर: " + result;
-            } catch (err) {
-                outputBox.innerText = "त्रुटी: चुकीचे समीकरण!";
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                let loadedImages = 0;
+                for (let i = 0; i < files.length; i++) {
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        if (i > 0) doc.addPage();
+                        doc.addImage(event.target.result, 'JPEG', 10, 10, 180, 160);
+                        loadedImages++;
+                        
+                        if (loadedImages === files.length) {
+                            doc.save('Images_Converted.pdf');
+                            showStatus('status-img', 'फोटोंची PDF यशस्वीरित्या तयार झाली!');
+                        }
+                    };
+                    reader.readAsDataURL(files[i]);
+                }
+            } catch(e) {
+                showStatus('status-img', 'फोटो प्रोसेस करताना एरर आला!', true);
             }
         }
 
-        // 5. Unit Converter Function
-        function convertUnits() {
-            let val = parseFloat(document.getElementById('unit-input').value);
-            let type = document.getElementById('convert-type').value;
-            let outputBox = document.getElementById('unit-output');
-
-            if (isNaN(val)) {
-                outputBox.innerText = 'कृपया वैध संख्या टाका!';
+        // 3. MERGE PDF WORKING LOGIC
+        async function mergePdfFiles() {
+            const files = document.getElementById('merge-input').files;
+            if (files.length < 2) {
+                showStatus('status-merge', 'एकत्र करण्यासाठी किमान २ PDF फाइल्स निवडा!', true);
                 return;
             }
 
-            let result = 0;
-            switch(type) {
-                case 'km-m': result = val * 1000; outputBox.innerText = `${val} km = ${result} meters`; break;
-                case 'm-km': result = val / 1000; outputBox.innerText = `${val} meters = ${result} km`; break;
-                case 'kg-gm': result = val * 1000; outputBox.innerText = `${val} kg = ${result} grams`; break;
-                case 'gm-kg': result = val / 1000; outputBox.innerText = `${val} grams = ${result} kg`; break;
-                default: outputBox.innerText = 'काहीतरी अडचण आली आहे!';
+            try {
+                const mergedPdf = await PDFLib.PDFDocument.create();
+                for (let i = 0; i < files.length; i++) {
+                    const fileBytes = await files[i].arrayBuffer();
+                    const pdf = await PDFLib.PDFDocument.load(fileBytes);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => mergedPdf.addPage(page));
+                }
+
+                const mergedPdfBytes = await mergedPdf.save();
+                let blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+                let link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = "Merged_Document.pdf";
+                link.click();
+                showStatus('status-merge', 'सर्व PDF फाइल्स यशस्वीरित्या एकत्र झाल्या!');
+            } catch(e) {
+                showStatus('status-merge', 'PDF मर्ज करताना एरर आला. कृपया फाइल्स तपासा!', true);
+            }
+        }
+
+        // 4. SPLIT PDF WORKING LOGIC
+        async function splitPdfFile() {
+            const fileInput = document.getElementById('split-input').files[0];
+            const pageNum = parseInt(document.getElementById('split-page-num').value);
+
+            if (!fileInput) {
+                showStatus('status-split', 'कृपया प्रथम PDF फाइल अपलोड करा!', true);
+                return;
+            }
+
+            try {
+                const fileBytes = await fileInput.arrayBuffer();
+                const srcPdf = await PDFLib.PDFDocument.load(fileBytes);
+                const totalPages = srcPdf.getPageCount();
+
+                if (pageNum < 1 || pageNum > totalPages) {
+                    showStatus('status-split', `या PDF मध्ये फक्त ${totalPages} पाने आहेत. योग्य नंबर टाका!`, true);
+                    return;
+                }
+
+                const newPdf = await PDFLib.PDFDocument.create();
+                const [copiedPage] = await newPdf.copyPages(srcPdf, [pageNum - 1]);
+                newPdf.addPage(copiedPage);
+
+                const newPdfBytes = await newPdf.save();
+                let blob = new Blob([newPdfBytes], { type: "application/pdf" });
+                let link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `Page_${pageNum}_Split.pdf`;
+                link.click();
+                showStatus('status-split', `पान नंबर ${pageNum} यशस्वीरित्या वेगळे केले आहे!`);
+            } catch(e) {
+                showStatus('status-split', 'PDF स्प्लिट करताना एरर आला!', true);
             }
         }
     </script>
 </body>
-            </html>
-                
+    </html>
+    
